@@ -21,6 +21,82 @@ Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 | nvme0n1 | CVPF6325009K450RGN | 450 GB | Système (installDisk) |
 | nvme1n1 | CVPF71620076450RGN | 450 GB | Data (UserVolumeConfig `data`, XFS) |
 
+## Bootstrap (première installation)
+
+Procédure complète pour installer Talos et bootstrapper le cluster depuis zéro.
+
+### Prérequis
+
+Le nœud doit démarrer sur l'ISO Talos (mode `maintenance`). Vérifier qu'il est joignable :
+```bash
+talosctl version --insecure --nodes 5.135.136.115
+```
+
+### 1. Générer les configurations
+
+```bash
+cd clusters/neltharion/
+talhelper genconfig
+```
+
+Produit dans `clusterconfig/` :
+- `talosconfig` — configuration client
+- `neltharion-ns3058844.yaml` — configuration du nœud
+
+### 2. Appliquer la configuration au nœud
+
+```bash
+talosctl apply-config --insecure \
+  --nodes 5.135.136.115 \
+  --file ./clusterconfig/neltharion-ns3058844.yaml
+```
+
+> `--insecure` est obligatoire au premier démarrage car il n'y a pas encore de certificat TLS en place. Le nœud redémarre automatiquement après l'application.
+
+### 3. Attendre que le nœud soit prêt
+
+Surveiller le démarrage (attendre que `TYPE` passe à `running`) :
+```bash
+talosctl -n 5.135.136.115 -e 5.135.136.115 \
+  --talosconfig=./clusterconfig/talosconfig \
+  health --wait-timeout 10m
+```
+
+Ou via le dashboard :
+```bash
+talosctl -n 5.135.136.115 -e 5.135.136.115 dashboard \
+  --talosconfig=./clusterconfig/talosconfig
+```
+
+### 4. Bootstrapper etcd (une seule fois)
+
+À exécuter **une seule fois** sur le premier nœud control plane :
+```bash
+talosctl bootstrap \
+  --nodes 5.135.136.115 \
+  --endpoints 5.135.136.115 \
+  --talosconfig=./clusterconfig/talosconfig
+```
+
+> Ne jamais relancer cette commande une fois le cluster démarré.
+
+### 5. Récupérer le kubeconfig
+
+```bash
+talosctl kubeconfig \
+  --nodes 5.135.136.115 \
+  --endpoints 5.135.136.115 \
+  --talosconfig=./clusterconfig/talosconfig \
+  --force
+```
+
+Le kubeconfig est fusionné dans `~/.kube/config`. Vérifier l'accès :
+```bash
+kubectl --context=admin@neltharion get nodes
+```
+
+---
+
 ## Commandes courantes
 
 ```bash

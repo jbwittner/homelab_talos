@@ -1,6 +1,6 @@
 # homelab-talos/clusters/neltharion/talconfig.yaml
 clusterName: neltharion
-talosVersion: v1.13.2
+talosVersion: v1.13.3
 kubernetesVersion: v1.36.1
 
 endpoint: https://5.135.136.115:6443
