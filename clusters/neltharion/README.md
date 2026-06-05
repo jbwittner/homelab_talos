@@ -1,66 +1,57 @@
-# Installation
+# Cluster neltharion
 
-Get disk information:
+Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
+
+## Informations
+
+| Champ | Valeur |
+|-------|--------|
+| Nom | neltharion |
+| Endpoint | https://5.135.136.115:6443 |
+| Talos | v1.13.2 |
+| Kubernetes | v1.36.1 |
+| Nœud | ns3058844 — control plane |
+| IP | 5.135.136.115 |
+| Interface | eno1 — gateway 5.135.136.254 |
+
+## Stockage
+
+| Disque | Série | Taille | Rôle |
+|--------|-------|--------|------|
+| nvme0n1 | CVPF6325009K450RGN | 450 GB | Système (installDisk) |
+| nvme1n1 | CVPF71620076450RGN | 450 GB | Data (UserVolumeConfig `data`, XFS) |
+
+## Commandes courantes
+
 ```bash
-talosctl get disks --insecure --nodes 5.135.136.115
+# Générer les configurations
+talhelper genconfig
+
+# Dashboard en temps réel
+talosctl -n 5.135.136.115 -e 5.135.136.115 dashboard \
+  --talosconfig=./clusterconfig/talosconfig
+
+# État des disques
+talosctl -n 5.135.136.115 -e 5.135.136.115 get disks \
+  --talosconfig=./clusterconfig/talosconfig
+
+# Appliquer la configuration
+talosctl apply-config \
+  --talosconfig=./clusterconfig/talosconfig \
+  --nodes=5.135.136.115 \
+  --file=./clusterconfig/neltharion-ns3058844.yaml
 ```
 
-```bash
-NODE   NAMESPACE   TYPE   ID        VERSION   SIZE     READ ONLY   TRANSPORT   ROTATIONAL   WWID               MODEL                 SERIAL
-       runtime     Disk   loop0     2         4.1 kB   true                                                                                                                                                        
-       runtime     Disk   loop1     2         102 kB   true                                                                                                                                                        
-       runtime     Disk   loop2     2         83 MB    true                                                                                                                                                        
-       runtime     Disk   nvme0n1   2         450 GB   false       nvme                     nvme.8086-43565046363332353030394b34353052474e-494e54454c205353445045324d583435304737-00000001   INTEL SSDPE2MX450G7   CVPF6325009K450RGN
-       runtime     Disk   nvme1n1   2         450 GB   false       nvme                     nvme.8086-43565046373136323030373634353052474e-494e54454c205353445045324d583435304737-00000001   INTEL SSDPE2MX450G7   CVPF71620076450RGN
-```
+## Fichiers
 
-```bash
-talosctl get links --insecure --nodes 5.135.136.115
-```
+| Fichier | Description |
+|---------|-------------|
+| `talconfig.yaml` | Configuration déclarative du cluster |
+| `talsecret.sops.yaml` | Secrets chiffrés (certificats, tokens) |
+| `clusterconfig/talosconfig` | Configuration client talosctl (généré) |
+| `clusterconfig/neltharion-ns3058844.yaml` | Config du nœud (généré) |
 
+Pour éditer les secrets :
 ```bash
-NODE   NAMESPACE   TYPE         ID        VERSION   ALIAS   TYPE       KIND     HW ADDR                                           OPER STATE   LINK STATE
-       network     LinkStatus   bond0     1                 ether      bond     7e:de:92:a1:a6:ce                                 down         false
-       network     LinkStatus   dummy0    1                 ether      dummy    56:43:8e:d5:e2:47                                 down         false
-       network     LinkStatus   eno1      3                 ether               0c:c4:7a:da:d1:64                                 up           true
-       network     LinkStatus   eno2      3                 ether               0c:c4:7a:da:d1:65                                 up           true
-       network     LinkStatus   ip6tnl0   1                 tunnel6    ip6tnl   00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00   down         false
-       network     LinkStatus   lo        2                 loopback            00:00:00:00:00:00                                 unknown      true
-       network     LinkStatus   sit0      1                 sit        sit      00:00:00:00                                       down         false
-       network     LinkStatus   teql0     1                 void                                                                  down         false
-       network     LinkStatus   tunl0     1                 ipip       ipip     00:00:00:00                                       down         false
-```
-
-```bash
-talosctl version --insecure --nodes 5.135.136.115
-```
-
-```bash
-Client:
-        Tag:         v1.13.2
-        SHA:         undefined
-        Built:       
-        Go version:  go1.26.3
-        OS/Arch:     darwin/arm64
-Server:
-        NODE:        5.135.136.115
-        Tag:         v1.13.3
-        SHA:         befeda7c
-        Built:       
-        Go version:  go1.26.3
-        OS/Arch:     linux/amd64
-        Enabled:     
-```
-
-```bash
-talosctl get addresses --insecure --nodes 5.135.136.115
-```
-
-```bash
-NODE   NAMESPACE   TYPE            ID                                 VERSION   ADDRESS                       LINK
-       network     AddressStatus   eno1/5.135.136.115/24              1         5.135.136.115/24              eno1
-       network     AddressStatus   eno1/fe80::ec4:7aff:feda:d164/64   2         fe80::ec4:7aff:feda:d164/64   eno1
-       network     AddressStatus   eno2/fe80::ec4:7aff:feda:d165/64   2         fe80::ec4:7aff:feda:d165/64   eno2
-       network     AddressStatus   lo/127.0.0.1/8                     1         127.0.0.1/8                   lo
-       network     AddressStatus   lo/::1/128                         1         ::1/128                       lo
+sops talsecret.sops.yaml
 ```
