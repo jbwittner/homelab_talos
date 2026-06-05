@@ -1,0 +1,39 @@
+# homelab-talos/clusters/neltharion/talconfig.yaml
+clusterName: neltharion
+talosVersion: v1.13.2
+kubernetesVersion: v1.36.1
+
+endpoint: https://5.135.136.115:6443
+
+nodes:
+  - hostname: ns3058844
+    ipAddress: 5.135.136.115
+    controlPlane: true
+    installDiskSelector:
+      serial: CVPF6325009K450RGN   # nvme0n1 = disque système
+    networkInterfaces:
+      - interface: eno1
+        addresses:
+          - 5.135.136.115/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 5.135.136.254
+
+    # UserVolumeConfig pour le disque data (nvme1n1), document séparé via patch
+    patches:
+      - |-
+        apiVersion: v1alpha1
+        kind: UserVolumeConfig
+        name: data
+        provisioning:
+          diskSelector:
+            match: disk.serial == "CVPF71620076450RGN" && !system_disk
+          maxSize: 450GB
+        filesystem:
+          type: xfs
+
+# Mono-node : autoriser les workloads sur le control plane
+patches:
+  - |-
+    cluster:
+      allowSchedulingOnControlPlanes: true

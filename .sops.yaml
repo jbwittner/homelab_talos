@@ -1,0 +1,5 @@
+# homelab-talos/.sops.yaml
+creation_rules:
+  - path_regex: \.sops\.yaml$
+    age: >-
+      age1cnu8unylpvjm0qxl3d6ran6m7k4a02ma8ge2d8hual28qylln92s6zn2xh
