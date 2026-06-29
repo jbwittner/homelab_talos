@@ -10,13 +10,6 @@ nodes:
     ipAddress: 51.255.205.150
     controlPlane: true
     installDisk: /dev/sda
-    networkInterfaces:
-      - interface: eno1
-        addresses:
-          - 51.255.205.150/24
-        routes:
-          - network: 0.0.0.0/0
-            gateway: 51.255.205.254
 
 # Mono-node : autoriser les workloads sur le control plane
 patches:
