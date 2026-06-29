@@ -1,0 +1,24 @@
+# homelab-talos/clusters/neltharion/talconfig.yaml
+clusterName: ysera
+talosVersion: v1.13.5
+kubernetesVersion: v1.36.1
+
+endpoint: https://51.255.205.150:6443
+
+nodes:
+  - hostname: vps-7a5b6065
+    ipAddress: 51.255.205.150
+    controlPlane: true
+    networkInterfaces:
+      - interface: eno1
+        addresses:
+          - 51.255.205.150/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 51.255.205.254
+
+# Mono-node : autoriser les workloads sur le control plane
+patches:
+  - |-
+    cluster:
+      allowSchedulingOnControlPlanes: true
