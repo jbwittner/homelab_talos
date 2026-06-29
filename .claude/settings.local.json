@@ -4,7 +4,8 @@
       "Bash(rtk git *)",
       "Bash(rtk ls *)",
       "Bash(rtk grep *)",
-      "Bash(echo \"exit=$?\")"
+      "Bash(echo \"exit=$?\")",
+      "WebFetch(domain:budimanjojo.github.io)"
     ]
   }
 }

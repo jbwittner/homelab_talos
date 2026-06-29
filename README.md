@@ -46,32 +46,34 @@ brew install talhelper talosctl sops age
 
 ### Générer les configurations
 ```bash
-cd neltharion/
+cd <cluster>/
 talhelper genconfig
 ```
 
 ### Monitorer le nœud
 ```bash
-cd neltharion/
-talosctl -n 5.135.136.115 -e 5.135.136.115 dashboard --talosconfig=./clusterconfig/talosconfig
+cd <cluster>/
+talosctl -n <IP> -e <IP> dashboard --talosconfig=./clusterconfig/talosconfig
 ```
 
 ### Récupérer des informations
 ```bash
-cd neltharion/
+cd <cluster>/
 
 # État des disques
-talosctl -n 5.135.136.115 -e 5.135.136.115 get disks --talosconfig=./clusterconfig/talosconfig
+talosctl -n <IP> -e <IP> get disks --talosconfig=./clusterconfig/talosconfig
 
 # Version du cluster
-talosctl -n 5.135.136.115 -e 5.135.136.115 version --talosconfig=./clusterconfig/talosconfig
+talosctl -n <IP> -e <IP> version --talosconfig=./clusterconfig/talosconfig
 ```
+
+> IPs et noms de fichiers concrets : voir le README de chaque cluster ([neltharion](neltharion/README.md), [ysera](ysera/README.md)).
 
 ## Workflows courants
 
 ### Mettre à jour un cluster existant
 ```bash
-cd neltharion/
+cd <cluster>/
 
 # 1. Modifier talconfig.yaml
 # 2. Régénérer les configurations
@@ -81,18 +83,22 @@ talhelper genconfig
 talhelper gencommand apply
 # ou directement :
 talosctl apply-config --talosconfig=./clusterconfig/talosconfig \
-  --nodes=5.135.136.115 \
-  --file=./clusterconfig/neltharion-ns3058844.yaml
+  --nodes=<IP> \
+  --file=./clusterconfig/<cluster>-<node>.yaml
 ```
 
-### Démarrer un nouveau cluster
+### Démarrer un nouveau cluster (depuis zéro)
 ```bash
 mkdir nouveau-cluster
 cd nouveau-cluster
 
 # 1. Créer talconfig.yaml avec la définition du cluster
-# 2. Créer talsecret.sops.yaml avec les secrets chiffrés
-# 3. Générer les configurations
+
+# 2. Générer les secrets puis les chiffrer en place
+talhelper gensecret > talsecret.sops.yaml
+sops -e -i talsecret.sops.yaml
+
+# 3. Générer les configurations (crée aussi clusterconfig/.gitignore)
 talhelper genconfig
 
 # 4. Appliquer aux nœuds (--insecure au premier démarrage)
@@ -104,6 +110,24 @@ talhelper gencommand bootstrap
 # 6. Récupérer le kubeconfig
 talhelper gencommand kubeconfig
 ```
+
+### Importer un cluster Talos existant
+```bash
+cd nouveau-cluster
+
+# 1. Extraire la machine config du control plane
+talosctl -n <controlplane-ip> get mc v1alpha1 -o jsonpath='{.spec}' > /tmp/machineconfig.yaml
+
+# 2. Générer les secrets à partir de la config existante, puis chiffrer
+talhelper gensecret -f /tmp/machineconfig.yaml > talsecret.sops.yaml
+sops -e -i talsecret.sops.yaml
+
+# 3. Écrire talconfig.yaml en se basant sur le cluster actuel
+# 4. Générer et appliquer
+talhelper genconfig
+```
+
+> `talhelper genconfig` régénère un `talosconfig` valide 365 jours à chaque exécution — le contenu diffère donc à chaque run.
 
 ## Gestion des secrets avec SOPS
 
@@ -130,6 +154,7 @@ age-keygen -o age-key.txt
 
 | Commande | Effet |
 |----------|-------|
+| `talhelper gensecret` | Génère les secrets (à chiffrer ensuite avec `sops -e -i`) |
 | `talhelper genconfig` | Génère configs nœuds + talosconfig |
 | `talhelper gencommand apply` | Affiche commande apply |
 | `talhelper gencommand bootstrap` | Affiche commande bootstrap |
