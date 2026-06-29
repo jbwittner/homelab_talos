@@ -1,4 +1,4 @@
-# Cluster neltharion
+# Cluster ysera
 
 Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 
@@ -6,20 +6,13 @@ Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 
 | Champ | Valeur |
 |-------|--------|
-| Nom | neltharion |
-| Endpoint | https://5.135.136.115:6443 |
-| Talos | v1.13.2 |
+| Nom | ysera |
+| Endpoint | https://51.255.205.150:6443 |
+| Talos | v1.13.5 |
 | Kubernetes | v1.36.1 |
-| Nœud | ns3058844 — control plane |
-| IP | 5.135.136.115 |
-| Interface | eno1 — gateway 5.135.136.254 |
-
-## Stockage
-
-| Disque | Série | Taille | Rôle |
-|--------|-------|--------|------|
-| nvme0n1 | CVPF6325009K450RGN | 450 GB | Système (installDisk) |
-| nvme1n1 | CVPF71620076450RGN | 450 GB | Data (UserVolumeConfig `data`, XFS) |
+| Nœud | vps-7a5b6065 — control plane |
+| IP | 51.255.205.150/24 |
+| Interface | eno1 — gateway 51.255.205.254 |
 
 ## Bootstrap (première installation)
 
@@ -35,20 +28,20 @@ talosctl version --insecure --nodes 51.255.205.150
 ### 1. Générer les configurations
 
 ```bash
-cd clusters/neltharion/
+cd ysera/
 talhelper genconfig
 ```
 
 Produit dans `clusterconfig/` :
 - `talosconfig` — configuration client
-- `neltharion-ns3058844.yaml` — configuration du nœud
+- `ysera-vps-7a5b6065.yaml` — configuration du nœud
 
 ### 2. Appliquer la configuration au nœud
 
 ```bash
 talosctl apply-config --insecure \
-  --nodes 5.135.136.115 \
-  --file ./clusterconfig/neltharion-ns3058844.yaml
+  --nodes 51.255.205.150 \
+  --file ./clusterconfig/ysera-vps-7a5b6065.yaml
 ```
 
 > `--insecure` est obligatoire au premier démarrage car il n'y a pas encore de certificat TLS en place. Le nœud redémarre automatiquement après l'application.
@@ -57,14 +50,14 @@ talosctl apply-config --insecure \
 
 Surveiller le démarrage (attendre que `TYPE` passe à `running`) :
 ```bash
-talosctl -n 5.135.136.115 -e 5.135.136.115 \
+talosctl -n 51.255.205.150 -e 51.255.205.150 \
   --talosconfig=./clusterconfig/talosconfig \
   health --wait-timeout 10m
 ```
 
 Ou via le dashboard :
 ```bash
-talosctl -n 5.135.136.115 -e 5.135.136.115 dashboard \
+talosctl -n 51.255.205.150 -e 51.255.205.150 dashboard \
   --talosconfig=./clusterconfig/talosconfig
 ```
 
@@ -73,8 +66,8 @@ talosctl -n 5.135.136.115 -e 5.135.136.115 dashboard \
 À exécuter **une seule fois** sur le premier nœud control plane :
 ```bash
 talosctl bootstrap \
-  --nodes 5.135.136.115 \
-  --endpoints 5.135.136.115 \
+  --nodes 51.255.205.150 \
+  --endpoints 51.255.205.150 \
   --talosconfig=./clusterconfig/talosconfig
 ```
 
@@ -84,15 +77,15 @@ talosctl bootstrap \
 
 ```bash
 talosctl kubeconfig \
-  --nodes 5.135.136.115 \
-  --endpoints 5.135.136.115 \
+  --nodes 51.255.205.150 \
+  --endpoints 51.255.205.150 \
   --talosconfig=./clusterconfig/talosconfig \
   --force
 ```
 
 Le kubeconfig est fusionné dans `~/.kube/config`. Vérifier l'accès :
 ```bash
-kubectl --context=admin@neltharion get nodes
+kubectl --context=admin@ysera get nodes
 ```
 
 ---
@@ -104,18 +97,18 @@ kubectl --context=admin@neltharion get nodes
 talhelper genconfig
 
 # Dashboard en temps réel
-talosctl -n 5.135.136.115 -e 5.135.136.115 dashboard \
+talosctl -n 51.255.205.150 -e 51.255.205.150 dashboard \
   --talosconfig=./clusterconfig/talosconfig
 
 # État des disques
-talosctl -n 5.135.136.115 -e 5.135.136.115 get disks \
+talosctl -n 51.255.205.150 -e 51.255.205.150 get disks \
   --talosconfig=./clusterconfig/talosconfig
 
 # Appliquer la configuration
 talosctl apply-config \
   --talosconfig=./clusterconfig/talosconfig \
-  --nodes=5.135.136.115 \
-  --file=./clusterconfig/neltharion-ns3058844.yaml
+  --nodes=51.255.205.150 \
+  --file=./clusterconfig/ysera-vps-7a5b6065.yaml
 ```
 
 ## Fichiers
@@ -125,7 +118,7 @@ talosctl apply-config \
 | `talconfig.yaml` | Configuration déclarative du cluster |
 | `talsecret.sops.yaml` | Secrets chiffrés (certificats, tokens) |
 | `clusterconfig/talosconfig` | Configuration client talosctl (généré) |
-| `clusterconfig/neltharion-ns3058844.yaml` | Config du nœud (généré) |
+| `clusterconfig/ysera-vps-7a5b6065.yaml` | Config du nœud (généré) |
 
 Pour éditer les secrets :
 ```bash

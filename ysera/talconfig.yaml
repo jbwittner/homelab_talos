@@ -9,6 +9,7 @@ nodes:
   - hostname: vps-7a5b6065
     ipAddress: 51.255.205.150
     controlPlane: true
+    installDisk: /dev/sda
     networkInterfaces:
       - interface: eno1
         addresses:

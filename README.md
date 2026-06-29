@@ -4,7 +4,7 @@ Gestionnaire de configuration pour clusters Kubernetes Talos Linux, utilisant `t
 
 ## Vue d'ensemble
 
-Ce dépôt centralise les configurations de clusters Talos Linux, permettant une gestion reproductible, versionée et sécurisée des clusters Kubernetes. Chaque cluster est isolé dans son propre répertoire sous `clusters/`.
+Ce dépôt centralise les configurations de clusters Talos Linux, permettant une gestion reproductible, versionée et sécurisée des clusters Kubernetes. Chaque cluster est isolé dans son propre répertoire à la racine du dépôt.
 
 ## Structure du répertoire
 
@@ -12,14 +12,17 @@ Ce dépôt centralise les configurations de clusters Talos Linux, permettant une
 homelab_talos/
 ├── README.md                         # Ce fichier
 ├── .sops.yaml                        # Règles de chiffrement age (global)
-└── clusters/
-    └── neltharion/                   # Cluster actif
-        ├── README.md                 # Documentation du cluster
-        ├── talconfig.yaml            # Configuration principale du cluster
-        ├── talsecret.sops.yaml       # Secrets chiffrés avec SOPS
-        └── clusterconfig/           # Généré par talhelper (gitignored)
-            ├── talosconfig           # Configuration client Talos
-            └── *.yaml                # Configurations spécifiques aux nœuds
+├── neltharion/                       # Cluster actif
+│   ├── README.md                     # Documentation du cluster
+│   ├── talconfig.yaml                # Configuration principale du cluster
+│   ├── talsecret.sops.yaml           # Secrets chiffrés avec SOPS
+│   └── clusterconfig/                # Généré par talhelper (gitignored)
+│       ├── talosconfig               # Configuration client Talos
+│       └── *.yaml                    # Configurations spécifiques aux nœuds
+└── ysera/                            # Cluster actif
+    ├── README.md
+    ├── talconfig.yaml
+    └── talsecret.sops.yaml
 ```
 
 ## Prérequis
@@ -43,19 +46,19 @@ brew install talhelper talosctl sops age
 
 ### Générer les configurations
 ```bash
-cd clusters/neltharion/
+cd neltharion/
 talhelper genconfig
 ```
 
 ### Monitorer le nœud
 ```bash
-cd clusters/neltharion/
+cd neltharion/
 talosctl -n 5.135.136.115 -e 5.135.136.115 dashboard --talosconfig=./clusterconfig/talosconfig
 ```
 
 ### Récupérer des informations
 ```bash
-cd clusters/neltharion/
+cd neltharion/
 
 # État des disques
 talosctl -n 5.135.136.115 -e 5.135.136.115 get disks --talosconfig=./clusterconfig/talosconfig
@@ -68,7 +71,7 @@ talosctl -n 5.135.136.115 -e 5.135.136.115 version --talosconfig=./clusterconfig
 
 ### Mettre à jour un cluster existant
 ```bash
-cd clusters/neltharion/
+cd neltharion/
 
 # 1. Modifier talconfig.yaml
 # 2. Régénérer les configurations
@@ -84,8 +87,8 @@ talosctl apply-config --talosconfig=./clusterconfig/talosconfig \
 
 ### Démarrer un nouveau cluster
 ```bash
-mkdir clusters/nouveau-cluster
-cd clusters/nouveau-cluster
+mkdir nouveau-cluster
+cd nouveau-cluster
 
 # 1. Créer talconfig.yaml avec la définition du cluster
 # 2. Créer talsecret.sops.yaml avec les secrets chiffrés
@@ -134,7 +137,7 @@ age-keygen -o age-key.txt
 | `talhelper gencommand upgrade` | Affiche commande upgrade |
 | `talhelper gencommand reset` | Affiche commande reset cluster |
 
-**Important :** Toujours exécuter depuis le répertoire du cluster (ex: `cd clusters/neltharion/`)
+**Important :** Toujours exécuter depuis le répertoire du cluster (ex: `cd neltharion/`)
 
 ## Pièges courants
 
@@ -165,7 +168,8 @@ talosctl -n <IP> -e <IP> version --talosconfig=./clusterconfig/talosconfig
 
 | Cluster | Statut | IP | Documentation |
 |---------|--------|----|---------------|
-| [neltharion](clusters/neltharion/) | Actif | 5.135.136.115 | [README](clusters/neltharion/README.md) |
+| [neltharion](neltharion/) | Actif | 5.135.136.115 | [README](neltharion/README.md) |
+| [ysera](ysera/) | Actif | 51.255.205.150 | [README](ysera/README.md) |
 
 ## Liens utiles
 

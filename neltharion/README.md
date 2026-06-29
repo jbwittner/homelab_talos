@@ -8,7 +8,7 @@ Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 |-------|--------|
 | Nom | neltharion |
 | Endpoint | https://5.135.136.115:6443 |
-| Talos | v1.13.2 |
+| Talos | v1.13.3 |
 | Kubernetes | v1.36.1 |
 | Nœud | ns3058844 — control plane |
 | IP | 5.135.136.115 |
@@ -18,8 +18,8 @@ Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 
 | Disque | Série | Taille | Rôle |
 |--------|-------|--------|------|
-| nvme0n1 | CVPF6325009K450RGN | 450 GB | Système (installDisk) |
-| nvme1n1 | CVPF71620076450RGN | 450 GB | Data (UserVolumeConfig `data`, XFS) |
+| nvme1n1 | CVPF71620076450RGN | 450 GB | Système (installDisk) |
+| nvme0n1 | CVPF6325009K450RGN | 450 GB | Data (UserVolumeConfig `data`, XFS) |
 
 ## Bootstrap (première installation)
 
@@ -35,7 +35,7 @@ talosctl version --insecure --nodes 5.135.136.115
 ### 1. Générer les configurations
 
 ```bash
-cd clusters/neltharion/
+cd neltharion/
 talhelper genconfig
 ```
 
