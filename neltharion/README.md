@@ -21,6 +21,48 @@ Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 | nvme1n1 | CVPF71620076450RGN | 450 GB | Système (installDisk) |
 | nvme0n1 | CVPF6325009K450RGN | 450 GB | Data (UserVolumeConfig `data`, XFS) |
 
+### Vérifier le stockage
+
+**Avant config (mode `maintenance`, pas encore de `talosconfig`)** — utiliser `--insecure`.
+C'est l'étape pour déterminer les séries de disques à mettre dans `talconfig.yaml` :
+
+```bash
+# Disques physiques (modèle, série, taille, transport)
+talosctl get disks --insecure --nodes 5.135.136.115
+
+# Volumes détectés (partitions, systèmes de fichiers, labels)
+talosctl get discoveredvolumes --insecure --nodes 5.135.136.115
+```
+
+> `--insecure` car aucun certificat TLS en place avant l'application de la config.
+> `volumestatus` / `uservolumeconfig` ne sont pas disponibles en mode maintenance — voir après config.
+
+**Après config (cluster bootstrappé)** — utiliser `talosconfig` :
+
+```bash
+cd neltharion/
+
+# Disques physiques
+talosctl -n 5.135.136.115 -e 5.135.136.115 get disks \
+  --talosconfig=./clusterconfig/talosconfig
+
+# Volumes détectés
+talosctl -n 5.135.136.115 -e 5.135.136.115 get discoveredvolumes \
+  --talosconfig=./clusterconfig/talosconfig
+
+# Statut des volumes gérés (phase, taille, point de montage)
+talosctl -n 5.135.136.115 -e 5.135.136.115 get volumestatus \
+  --talosconfig=./clusterconfig/talosconfig
+
+# Volume utilisateur `data` (config déclarée)
+talosctl -n 5.135.136.115 -e 5.135.136.115 get uservolumeconfig \
+  --talosconfig=./clusterconfig/talosconfig
+
+# Points de montage et espace utilisé
+talosctl -n 5.135.136.115 -e 5.135.136.115 mounts \
+  --talosconfig=./clusterconfig/talosconfig
+```
+
 ## Bootstrap (première installation)
 
 Procédure complète pour installer Talos et bootstrapper le cluster depuis zéro.

@@ -10,7 +10,7 @@ nodes:
     ipAddress: 5.135.136.115
     controlPlane: true
     installDiskSelector:
-      serial: CVPF71620076450RGN   # nvme1n1 = OS (aligné sur la réalité)
+      serial: CVPF71620076450RGN   # nvme0n1 = OS (aligné sur la réalité)
     networkInterfaces:
       - interface: eno1
         addresses:
@@ -28,7 +28,7 @@ nodes:
         provisioning:
           diskSelector:
             match: disk.serial == "CVPF6325009K450RGN" && !system_disk
-          maxSize: 450GB
+          maxSize: 500GB
         filesystem:
           type: xfs
 
