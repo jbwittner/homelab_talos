@@ -16,10 +16,10 @@ Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 
 ## Stockage
 
-| Disque | Série | Taille | Rôle |
-|--------|-------|--------|------|
-| nvme1n1 | CVPF71620076450RGN | 450 GB | Système (installDisk) |
-| nvme0n1 | CVPF6325009K450RGN | 450 GB | Data (UserVolumeConfig `data`, XFS) |
+| Disque | Série | Modèle | Taille | Rôle |
+|--------|-------|--------|--------|------|
+| nvme0n1 | CVPF71620076450RGN | INTEL SSDPE2MX450G7 | 450 GB | Système (installDisk) |
+| nvme1n1 | CVPF6325009K450RGN | INTEL SSDPE2MX450G7 | 450 GB | Data (UserVolumeConfig `data`, XFS) |
 
 ### Vérifier le stockage
 

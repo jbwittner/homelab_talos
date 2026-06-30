@@ -5,7 +5,10 @@
       "Bash(rtk ls *)",
       "Bash(rtk grep *)",
       "Bash(echo \"exit=$?\")",
-      "WebFetch(domain:budimanjojo.github.io)"
+      "WebFetch(domain:budimanjojo.github.io)",
+      "WebSearch",
+      "WebFetch(domain:www.talos.dev)",
+      "WebFetch(domain:docs.siderolabs.com)"
     ]
   }
 }
