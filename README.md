@@ -22,6 +22,7 @@ Tous les clusters sont actuellement **mono-nœud** (le control plane accueille a
 homelab_talos/
 ├── README.md                         # Ce fichier — présentation du projet
 ├── docs/
+│   ├── INSTALLATION.md               # Prérequis et installation des outils
 │   └── COMMANDES.md                  # Guide des commandes talhelper / talosctl / SOPS
 ├── .sops.yaml                        # Règles de chiffrement age (global)
 └── <cluster>/                        # Un répertoire par cluster
@@ -33,25 +34,9 @@ homelab_talos/
         └── *.yaml                    # Configurations spécifiques aux nœuds
 ```
 
-## Prérequis
-
-### Outils requis
-- **talhelper** — Gestionnaire de configurations Talos
-- **talosctl** — CLI Talos pour la gestion des nœuds
-- **sops** — Outil de chiffrement/déchiffrement
-- **age** — Chiffrement symétrique (back-end de SOPS)
-
-### Installation macOS
-```bash
-brew install talhelper talosctl sops age
-```
-
-### Clés de chiffrement
-- **Clé privée age** — Requise pour déchiffrer les secrets (non versionée)
-- **Clé publique age** — Stockée dans `.sops.yaml` pour le chiffrement
-
 ## Documentation
 
+- **[docs/INSTALLATION.md](docs/INSTALLATION.md)** — Prérequis et installation des outils (talhelper, talosctl, sops, age) et des clés de chiffrement.
 - **[docs/COMMANDES.md](docs/COMMANDES.md)** — Guide des commandes courantes : génération de config, workflows, gestion des secrets SOPS, débogage et pièges.
 - **README de chaque cluster** — IPs, disques et procédure de bootstrap spécifiques.
 
