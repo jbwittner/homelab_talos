@@ -8,7 +8,8 @@
       "WebFetch(domain:budimanjojo.github.io)",
       "WebSearch",
       "WebFetch(domain:www.talos.dev)",
-      "WebFetch(domain:docs.siderolabs.com)"
+      "WebFetch(domain:docs.siderolabs.com)",
+      "Bash(rtk read *)"
     ]
   }
 }

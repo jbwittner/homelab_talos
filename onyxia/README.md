@@ -1,6 +1,6 @@
 # Cluster onyxia
 
-Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
+Cluster Kubernetes Talos Linux mono-nœud auto-hébergé (bare metal, à la maison).
 
 ## Informations
 
@@ -8,9 +8,9 @@ Cluster Kubernetes Talos Linux mono-nœud hébergé chez OVH.
 |-------|--------|
 | Nom | onyxia |
 | Endpoint | https://192.168.1.113:6443 |
-| Talos | v1.13.3 |
-| Kubernetes | v1.36.1 |
-| Nœud | ns3058844 — control plane |
+| Talos | v1.13.4 |
+| Kubernetes | v1.36.2 |
+| Nœud | onyxia-host — control plane |
 | IP | 192.168.1.113 |
 
 ## Stockage
@@ -76,20 +76,20 @@ talosctl version --insecure --nodes 192.168.1.113
 ### 1. Générer les configurations
 
 ```bash
-cd neltharion/
+cd onyxia/
 talhelper genconfig
 ```
 
 Produit dans `clusterconfig/` :
 - `talosconfig` — configuration client
-- `neltharion-ns3058844.yaml` — configuration du nœud
+- `onyxia-onyxia-host.yaml` — configuration du nœud
 
 ### 2. Appliquer la configuration au nœud
 
 ```bash
 talosctl apply-config --insecure \
   --nodes 192.168.1.113 \
-  --file ./clusterconfig/neltharion-ns3058844.yaml
+  --file ./clusterconfig/onyxia-onyxia-host.yaml
 ```
 
 > `--insecure` est obligatoire au premier démarrage car il n'y a pas encore de certificat TLS en place. Le nœud redémarre automatiquement après l'application.
@@ -133,7 +133,7 @@ talosctl kubeconfig \
 
 Le kubeconfig est fusionné dans `~/.kube/config`. Vérifier l'accès :
 ```bash
-kubectl --context=admin@neltharion get nodes
+kubectl --context=admin@onyxia get nodes
 ```
 
 ---
@@ -156,7 +156,7 @@ talosctl -n 192.168.1.113 -e 192.168.1.113 get disks \
 talosctl apply-config \
   --talosconfig=./clusterconfig/talosconfig \
   --nodes=192.168.1.113 \
-  --file=./clusterconfig/neltharion-ns3058844.yaml
+  --file=./clusterconfig/onyxia-onyxia-host.yaml
 ```
 
 ## Fichiers
@@ -166,7 +166,7 @@ talosctl apply-config \
 | `talconfig.yaml` | Configuration déclarative du cluster |
 | `talsecret.sops.yaml` | Secrets chiffrés (certificats, tokens) |
 | `clusterconfig/talosconfig` | Configuration client talosctl (généré) |
-| `clusterconfig/neltharion-ns3058844.yaml` | Config du nœud (généré) |
+| `clusterconfig/onyxia-onyxia-host.yaml` | Config du nœud (généré) |
 
 Pour éditer les secrets :
 ```bash
