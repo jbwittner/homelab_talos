@@ -1,0 +1,19 @@
+# homelab-talos/clusters/neltharion/talconfig.yaml
+clusterName: onyxia
+talosVersion: v1.13.4
+kubernetesVersion: v1.36.2
+
+endpoint: https://192.168.1.113:6443
+
+nodes:
+  - hostname: onyxia-host
+    ipAddress: 192.168.1.113
+    controlPlane: true
+    installDiskSelector:
+      serial: 2102357DWVN0RA105082   # nvme0n1 = OS (aligné sur la réalité)
+
+# Mono-node : autoriser les workloads sur le control plane
+patches:
+  - |-
+    cluster:
+      allowSchedulingOnControlPlanes: true
