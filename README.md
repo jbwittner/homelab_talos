@@ -23,6 +23,7 @@ homelab_talos/
 ├── README.md                         # Ce fichier — présentation du projet
 ├── docs/
 │   ├── INSTALLATION.md               # Prérequis et installation des outils
+│   ├── BOOTSTRAP.md                  # Procédure générique d'installation d'un cluster
 │   └── COMMANDES.md                  # Guide des commandes talhelper / talosctl / SOPS
 ├── .sops.yaml                        # Règles de chiffrement age (global)
 └── <cluster>/                        # Un répertoire par cluster
@@ -37,8 +38,9 @@ homelab_talos/
 ## Documentation
 
 - **[docs/INSTALLATION.md](docs/INSTALLATION.md)** — Prérequis et installation des outils (talhelper, talosctl, sops, age) et des clés de chiffrement.
+- **[docs/BOOTSTRAP.md](docs/BOOTSTRAP.md)** — Procédure générique d'installation d'un cluster depuis zéro.
 - **[docs/COMMANDES.md](docs/COMMANDES.md)** — Guide des commandes courantes : génération de config, workflows, gestion des secrets SOPS, débogage et pièges.
-- **README de chaque cluster** — IPs, disques et procédure de bootstrap spécifiques.
+- **README de chaque cluster** — données propres au cluster : IPs, disques, paramètres à substituer.
 
 ## Liens utiles
 
