@@ -15,6 +15,7 @@ Tous les clusters sont actuellement **mono-nœud** (le control plane accueille a
 | [neltharion](neltharion/) | Bare metal | OVH | Mono-nœud | https://5.135.136.115:6443 | [README](neltharion/README.md) |
 | [ysera](ysera/) | VPS | OVH | Mono-nœud | https://51.255.205.150:6443 | [README](ysera/README.md) |
 | [onyxia](onyxia/) | Bare metal | Self-hosted (maison) | Mono-nœud | https://192.168.1.113:6443 | [README](onyxia/README.md) |
+| [kalecgos](kalecgos/) | Bare metal | Self-hosted (maison) | Mono-nœud | https://192.168.1.11:6443 | [README](kalecgos/README.md) |
 
 ## Structure du répertoire
 
