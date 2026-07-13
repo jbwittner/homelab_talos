@@ -33,7 +33,20 @@ Le nœud doit démarrer sur l'ISO Talos (mode `maintenance`). Vérifier qu'il es
 talosctl version --insecure --nodes <IP>
 ```
 
-## 1. Générer les configurations
+## 1. Générer les secrets (avant la config)
+
+`talhelper genconfig` a besoin de `talsecret.sops.yaml`. Le générer puis le chiffrer en place **avant** l'étape suivante :
+
+```bash
+cd <cluster>/
+talhelper gensecret > talsecret.sops.yaml
+sops -e -i talsecret.sops.yaml
+```
+
+> `gensecret` écrit les secrets en clair — toujours enchaîner avec `sops -e -i`. Un `.sops.yaml` valide (règle + clé age) doit exister à la racine du dépôt.
+> Si le cluster existe déjà, réutiliser le `talsecret.sops.yaml` existant et sauter cette étape.
+
+## 2. Générer les configurations
 
 ```bash
 cd <cluster>/
@@ -44,7 +57,7 @@ Produit dans `clusterconfig/` :
 - `talosconfig` — configuration client
 - `<node-file>` — configuration du nœud
 
-## 2. Appliquer la configuration au nœud
+## 3. Appliquer la configuration au nœud
 
 ```bash
 talosctl apply-config --insecure \
@@ -54,7 +67,7 @@ talosctl apply-config --insecure \
 
 > `--insecure` est obligatoire au premier démarrage (pas encore de certificat TLS). Le nœud redémarre automatiquement après l'application.
 
-## 3. Attendre que le nœud soit prêt
+## 4. Attendre que le nœud soit prêt
 
 ```bash
 talosctl -n <IP> -e <IP> \
@@ -68,7 +81,7 @@ talosctl -n <IP> -e <IP> dashboard \
   --talosconfig=./clusterconfig/talosconfig
 ```
 
-## 4. Bootstrapper etcd (une seule fois)
+## 5. Bootstrapper etcd (une seule fois)
 
 À exécuter **une seule fois** sur le premier nœud control plane :
 ```bash
@@ -80,7 +93,7 @@ talosctl bootstrap \
 
 > Ne jamais relancer cette commande une fois le cluster démarré.
 
-## 5. Récupérer le kubeconfig
+## 6. Récupérer le kubeconfig
 
 ```bash
 talosctl kubeconfig \

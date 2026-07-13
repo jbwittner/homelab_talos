@@ -100,6 +100,19 @@ talhelper genconfig
 
 ## Gestion des secrets avec SOPS
 
+### Générer le talsecret.sops.yaml
+```bash
+# Depuis zéro : générer les secrets puis les chiffrer en place
+talhelper gensecret > talsecret.sops.yaml
+sops -e -i talsecret.sops.yaml
+
+# À partir d'une machine config existante
+talhelper gensecret -f /tmp/machineconfig.yaml > talsecret.sops.yaml
+sops -e -i talsecret.sops.yaml
+```
+
+> `talhelper gensecret` écrit les secrets en clair. Toujours enchaîner avec `sops -e -i` avant de commiter. Un `.sops.yaml` valide (règle de chiffrement + clé age) doit exister à la racine du dépôt.
+
 ### Décrypter un secret
 ```bash
 sops -d talsecret.sops.yaml

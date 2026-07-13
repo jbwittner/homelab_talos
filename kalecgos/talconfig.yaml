@@ -1,0 +1,19 @@
+# homelab-talos/clusters/neltharion/talconfig.yaml
+clusterName: bleu-kalecgos
+talosVersion: v1.13.4
+kubernetesVersion: v1.36.2
+
+endpoint: https://192.168.1.11:6443
+
+nodes:
+  - hostname: vert-eranikus
+    ipAddress: 192.168.1.11
+    controlPlane: true
+    installDiskSelector:
+      serial: 202512100355   # nvme0n1 = OS (aligné sur la réalité)
+
+# Mono-node : autoriser les workloads sur le control plane
+patches:
+  - |-
+    cluster:
+      allowSchedulingOnControlPlanes: true
