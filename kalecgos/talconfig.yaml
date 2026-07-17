@@ -2,7 +2,7 @@
 # Requires talhelper >= v3.0.37 (multi-document strategic-merge patch support).
 # Check: talhelper --version
 clusterName: bleu-kalecgos
-talosVersion: v1.13.4
+talosVersion: v1.13.5
 kubernetesVersion: v1.36.2
 
 endpoint: https://192.168.1.11:6443
