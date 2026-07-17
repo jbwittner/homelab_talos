@@ -1,4 +1,6 @@
 # homelab-talos/clusters/kalecgos/talconfig.yaml
+# Requires talhelper >= v3.0.37 (multi-document strategic-merge patch support).
+# Check: talhelper --version
 clusterName: bleu-kalecgos
 talosVersion: v1.13.4
 kubernetesVersion: v1.36.2
@@ -14,7 +16,42 @@ nodes:
     ipAddress: 192.168.1.11
     controlPlane: true
     installDiskSelector:
-      serial: "202512100355"   # nvme0n1 = OS
+      serial: "202512100355"   # nvme0n1 = OS (single disk: OS + LVM cohabitent)
+    # Patches spécifiques au nœud : layout disque + modules kernel LVM.
+    # NB : strategic-merge uniquement (pas de RFC6902 sur configs multi-docs).
+    patches:
+      # 1) Modules device-mapper — patch du document v1alpha1 principal.
+      #    dm_thin_pool = thin provisioning ; dm_snapshot = snapshots (optionnel).
+      - |-
+        machine:
+          kernel:
+            modules:
+              - name: dm_mod
+              - name: dm_thin_pool
+              - name: dm_snapshot
+      # 2) Cap EPHEMERAL à 100 GiB — DOCUMENT autonome (pas sous machine:).
+      #    Appliqué à la provision uniquement (donc au reprovision).
+      - |-
+        apiVersion: v1alpha1
+        kind: VolumeConfig
+        name: EPHEMERAL
+        provisioning:
+          diskSelector:
+            match: system_disk
+          grow: true
+          maxSize: 100GiB
+      # 3) Partition BRUTE (non formatée) pour le PV LVM — DOCUMENT autonome.
+      #    Cappée à 360 GiB : 100 + 360 = 460 <= ~474 GiB utiles => ordre-robuste.
+      #    Récupère son label après reprovision (get discoveredvolumes) pour le Job.
+      - |-
+        apiVersion: v1alpha1
+        kind: RawVolumeConfig
+        name: lvmpv
+        provisioning:
+          diskSelector:
+            match: system_disk
+          grow: true
+          maxSize: 360GiB
 
 # Patches cluster-wide
 patches:
@@ -24,4 +61,4 @@ patches:
   - |-
     cluster:
       proxy:
-        disabled: true 
+        disabled: true
