@@ -16,7 +16,7 @@ nodes:
     ipAddress: 192.168.1.11
     controlPlane: true
     installDiskSelector:
-      serial: "202512100355"   # nvme0n1 = OS (single disk: OS + LVM cohabitent)
+      serial: "P320HHBB250926006689"   # Patriot M.2 P320 128GB — OS uniquement
     # Patches spécifiques au nœud : layout disque + modules kernel LVM.
     # NB : strategic-merge uniquement (pas de RFC6902 sur configs multi-docs).
     patches:
@@ -29,8 +29,8 @@ nodes:
               - name: dm_mod
               - name: dm_thin_pool
               - name: dm_snapshot
-      # 2) Cap EPHEMERAL à 100 GiB — DOCUMENT autonome (pas sous machine:).
-      #    Appliqué à la provision uniquement (donc au reprovision).
+      # 2) EPHEMERAL : occupe tout le disque système (128 Go dédié à l'OS).
+      #    Plus de cap : il n'y a plus rien d'autre à loger dessus.
       - |-
         apiVersion: v1alpha1
         kind: VolumeConfig
@@ -39,19 +39,18 @@ nodes:
           diskSelector:
             match: system_disk
           grow: true
-          maxSize: 100GiB
-      # 3) Partition BRUTE (non formatée) pour le PV LVM — DOCUMENT autonome.
-      #    Cappée à 360 GiB : 100 + 360 = 460 <= ~474 GiB utiles => ordre-robuste.
-      #    Récupère son label après reprovision (get discoveredvolumes) pour le Job.
+      # 3) Partition BRUTE pour le PV LVM — disque 512 Go dédié à la data.
+      #    Sélection par serial : l'énumération nvmeXn1 n'est PAS stable.
+      #    Partlabel résultant : r-lvmpv
       - |-
         apiVersion: v1alpha1
         kind: RawVolumeConfig
         name: lvmpv
         provisioning:
           diskSelector:
-            match: system_disk
+            match: disk.serial == "202512100355"
+          minSize: 400GiB
           grow: true
-          maxSize: 360GiB
 
 # Patches cluster-wide
 patches:
