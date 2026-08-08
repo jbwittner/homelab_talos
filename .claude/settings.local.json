@@ -9,7 +9,13 @@
       "WebSearch",
       "WebFetch(domain:www.talos.dev)",
       "WebFetch(domain:docs.siderolabs.com)",
-      "Bash(rtk read *)"
+      "Bash(rtk read *)",
+      "Bash(rtk wc *)",
+      "Bash(git mv *)",
+      "Bash(perl -pi -e 's/\\(?<!bleu-\\)\\\\b\\(arcanogos|kalecgos\\)\\\\b/bleu-$1/g' README.md CLAUDE.md docs/COMMANDES.md bleu-arcanogos/README.md bleu-kalecgos/README.md bleu-arcanogos/talconfig.yaml bleu-kalecgos/talconfig.yaml)",
+      "Bash(perl -pi -e 's/bleu-arcanogos-vert-eranikus/bleu-arcanogos-vert-itharius/g' bleu-arcanogos/README.md)",
+      "Bash(echo \"exit=$? \\(1 = plus aucune occurrence\\)\")",
+      "Bash(perl -pi -e 's/^\\\\| Talos \\\\| v1\\\\.13\\\\.4 \\\\|$/| Talos | v1.13.5 |/' bleu-arcanogos/README.md bleu-kalecgos/README.md)"
     ]
   }
 }

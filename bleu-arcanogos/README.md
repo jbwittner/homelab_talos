@@ -1,4 +1,4 @@
-# Cluster kalecgos
+# Cluster bleu-arcanogos
 
 Cluster Kubernetes Talos Linux mono-nœud, homelab (réseau local).
 
@@ -6,12 +6,12 @@ Cluster Kubernetes Talos Linux mono-nœud, homelab (réseau local).
 
 | Champ | Valeur |
 |-------|--------|
-| Nom | kalecgos (clusterName `bleu-kalecgos`) |
-| Endpoint | https://192.168.1.11:6443 |
-| Talos | v1.13.4 |
+| Nom | bleu-arcanogos (clusterName `bleu-arcanogos`) |
+| Endpoint | https://192.168.1.12:6443 |
+| Talos | v1.13.5 |
 | Kubernetes | v1.36.2 |
-| Nœud | vert-eranikus — control plane |
-| IP | 192.168.1.11 |
+| Nœud | vert-itharius — control plane |
+| IP | 192.168.1.12 |
 
 > Mono-nœud : `allowSchedulingOnControlPlanes: true` — workloads autorisés sur le control plane.
 
@@ -27,12 +27,12 @@ Valeurs de ce cluster (déjà substituées dans les commandes ci-dessous) :
 
 | Placeholder | Valeur |
 |-------------|--------|
-| `<IP>` | 192.168.1.11 |
-| `<cluster>` | kalecgos |
-| `<node-file>` | bleu-kalecgos-vert-eranikus.yaml |
-| `<context>` | admin@bleu-kalecgos |
+| `<IP>` | 192.168.1.12 |
+| `<cluster>` | bleu-arcanogos |
+| `<node-file>` | bleu-arcanogos-vert-itharius.yaml |
+| `<context>` | admin@bleu-arcanogos |
 
-> Toujours exécuter les commandes depuis ce répertoire (`cd kalecgos/`). Les chemins `./clusterconfig/...` en dépendent.
+> Toujours exécuter les commandes depuis ce répertoire (`cd bleu-arcanogos/`). Les chemins `./clusterconfig/...` en dépendent.
 > Docs génériques : [BOOTSTRAP.md](../docs/BOOTSTRAP.md), [COMMANDES.md](../docs/COMMANDES.md).
 
 ---
@@ -45,10 +45,10 @@ Mode `maintenance` (pas encore de `talosconfig`) → `--insecure`. Étape pour d
 
 ```bash
 # Disques physiques (modèle, série, taille, transport)
-talosctl get disks --insecure --nodes 192.168.1.11
+talosctl get disks --insecure --nodes 192.168.1.12
 
 # Volumes détectés (partitions, systèmes de fichiers, labels)
-talosctl get discoveredvolumes --insecure --nodes 192.168.1.11
+talosctl get discoveredvolumes --insecure --nodes 192.168.1.12
 ```
 
 > `--insecure` car aucun certificat TLS avant l'application de la config.
@@ -58,7 +58,7 @@ talosctl get discoveredvolumes --insecure --nodes 192.168.1.11
 
 Le nœud doit démarrer sur l'ISO Talos (mode `maintenance`). Vérifier qu'il est joignable :
 ```bash
-talosctl version --insecure --nodes 192.168.1.11
+talosctl version --insecure --nodes 192.168.1.12
 ```
 
 ## 1. Générer les secrets (avant la config)
@@ -66,7 +66,7 @@ talosctl version --insecure --nodes 192.168.1.11
 `talhelper genconfig` a besoin de `talsecret.sops.yaml`. Le générer puis le chiffrer **avant** l'étape suivante :
 
 ```bash
-cd kalecgos/
+cd bleu-arcanogos/
 talhelper gensecret > talsecret.sops.yaml
 sops -e -i talsecret.sops.yaml
 ```
@@ -77,20 +77,20 @@ sops -e -i talsecret.sops.yaml
 ## 2. Générer les configurations
 
 ```bash
-cd kalecgos/
+cd bleu-arcanogos/
 talhelper genconfig
 ```
 
 Produit dans `clusterconfig/` :
 - `talosconfig` — configuration client
-- `bleu-kalecgos-vert-eranikus.yaml` — configuration du nœud
+- `bleu-arcanogos-vert-itharius.yaml` — configuration du nœud
 
 ## 3. Appliquer la configuration au nœud
 
 ```bash
 talosctl apply-config --insecure \
-  --nodes 192.168.1.11 \
-  --file ./clusterconfig/bleu-kalecgos-vert-eranikus.yaml
+  --nodes 192.168.1.12 \
+  --file ./clusterconfig/bleu-arcanogos-vert-itharius.yaml
 ```
 
 > `--insecure` obligatoire au premier démarrage (pas encore de certificat TLS). Le nœud redémarre automatiquement après l'application.
@@ -98,14 +98,14 @@ talosctl apply-config --insecure \
 ## 4. Attendre que le nœud soit prêt
 
 ```bash
-talosctl -n 192.168.1.11 -e 192.168.1.11 \
+talosctl -n 192.168.1.12 -e 192.168.1.12 \
   --talosconfig=./clusterconfig/talosconfig \
   health --wait-timeout 10m
 ```
 
 Ou via le dashboard :
 ```bash
-talosctl -n 192.168.1.11 -e 192.168.1.11 dashboard \
+talosctl -n 192.168.1.12 -e 192.168.1.12 dashboard \
   --talosconfig=./clusterconfig/talosconfig
 ```
 
@@ -114,8 +114,8 @@ talosctl -n 192.168.1.11 -e 192.168.1.11 dashboard \
 À exécuter **une seule fois** sur le control plane :
 ```bash
 talosctl bootstrap \
-  --nodes 192.168.1.11 \
-  --endpoints 192.168.1.11 \
+  --nodes 192.168.1.12 \
+  --endpoints 192.168.1.12 \
   --talosconfig=./clusterconfig/talosconfig
 ```
 
@@ -125,15 +125,15 @@ talosctl bootstrap \
 
 ```bash
 talosctl kubeconfig \
-  --nodes 192.168.1.11 \
-  --endpoints 192.168.1.11 \
+  --nodes 192.168.1.12 \
+  --endpoints 192.168.1.12 \
   --talosconfig=./clusterconfig/talosconfig \
   --force
 ```
 
 Le kubeconfig est fusionné dans `~/.kube/config`. Vérifier l'accès :
 ```bash
-kubectl --context=admin@bleu-kalecgos get nodes
+kubectl --context=admin@bleu-arcanogos get nodes
 ```
 
 ## Vérifier le stockage (après config)
@@ -142,19 +142,19 @@ Une fois le cluster bootstrappé, utiliser `talosconfig` :
 
 ```bash
 # Disques physiques
-talosctl -n 192.168.1.11 -e 192.168.1.11 get disks --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 get disks --talosconfig=./clusterconfig/talosconfig
 
 # Volumes détectés
-talosctl -n 192.168.1.11 -e 192.168.1.11 get discoveredvolumes --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 get discoveredvolumes --talosconfig=./clusterconfig/talosconfig
 
 # Statut des volumes gérés (phase, taille, point de montage)
-talosctl -n 192.168.1.11 -e 192.168.1.11 get volumestatus --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 get volumestatus --talosconfig=./clusterconfig/talosconfig
 
 # Volume utilisateur (config déclarée)
-talosctl -n 192.168.1.11 -e 192.168.1.11 get uservolumeconfig --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 get uservolumeconfig --talosconfig=./clusterconfig/talosconfig
 
 # Points de montage et espace utilisé
-talosctl -n 192.168.1.11 -e 192.168.1.11 mounts --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 mounts --talosconfig=./clusterconfig/talosconfig
 ```
 
 ---
@@ -165,28 +165,28 @@ talosctl -n 192.168.1.11 -e 192.168.1.11 mounts --talosconfig=./clusterconfig/ta
 
 ### Générer les configurations
 ```bash
-cd kalecgos/
+cd bleu-arcanogos/
 talhelper genconfig
 ```
 
 ### Monitorer le nœud
 ```bash
-talosctl -n 192.168.1.11 -e 192.168.1.11 dashboard --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 dashboard --talosconfig=./clusterconfig/talosconfig
 ```
 
 ### Récupérer des informations
 ```bash
 # État des disques
-talosctl -n 192.168.1.11 -e 192.168.1.11 get disks --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 get disks --talosconfig=./clusterconfig/talosconfig
 
 # Version du cluster
-talosctl -n 192.168.1.11 -e 192.168.1.11 version --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 version --talosconfig=./clusterconfig/talosconfig
 ```
 
 ## Mettre à jour le cluster
 
 ```bash
-cd kalecgos/
+cd bleu-arcanogos/
 
 # 1. Modifier talconfig.yaml
 # 2. Régénérer les configurations
@@ -196,8 +196,8 @@ talhelper genconfig
 talhelper gencommand apply
 # ou directement :
 talosctl apply-config --talosconfig=./clusterconfig/talosconfig \
-  --nodes=192.168.1.11 \
-  --file=./clusterconfig/bleu-kalecgos-vert-eranikus.yaml
+  --nodes=192.168.1.12 \
+  --file=./clusterconfig/bleu-arcanogos-vert-itharius.yaml
 ```
 
 > `talhelper genconfig` régénère un `talosconfig` valide 365 jours à chaque exécution — le contenu diffère donc à chaque run.
@@ -252,16 +252,16 @@ age-keygen -o age-key.txt
 
 ```bash
 # Dashboard en temps réel
-talosctl -n 192.168.1.11 -e 192.168.1.11 dashboard --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 dashboard --talosconfig=./clusterconfig/talosconfig
 
 # Logs système
-talosctl -n 192.168.1.11 -e 192.168.1.11 logs --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 logs --talosconfig=./clusterconfig/talosconfig
 
 # État des disques (avant talosconfig : ajouter --insecure)
-talosctl -n 192.168.1.11 -e 192.168.1.11 get disks --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 get disks --talosconfig=./clusterconfig/talosconfig
 
 # Version et status
-talosctl -n 192.168.1.11 -e 192.168.1.11 version --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.12 -e 192.168.1.12 version --talosconfig=./clusterconfig/talosconfig
 ```
 
 ## Pièges courants
@@ -272,7 +272,7 @@ talosctl -n 192.168.1.11 -e 192.168.1.11 version --talosconfig=./clusterconfig/t
 | `--insecure` rejeté | Utiliser seulement au démarrage initial (mode maintenance) |
 | Disques non reconnus | Vérifier avec `talosctl get disks` |
 | Modifications ignorées | Éditer `talconfig.yaml`, pas les fichiers `clusterconfig/` |
-| Commande exécutée hors dossier cluster | `cd kalecgos/` avant toute commande |
+| Commande exécutée hors dossier cluster | `cd bleu-arcanogos/` avant toute commande |
 
 ## Fichiers du cluster
 
@@ -281,4 +281,4 @@ talosctl -n 192.168.1.11 -e 192.168.1.11 version --talosconfig=./clusterconfig/t
 | `talconfig.yaml` | Configuration déclarative du cluster |
 | `talsecret.sops.yaml` | Secrets chiffrés (certificats, tokens) |
 | `clusterconfig/talosconfig` | Configuration client talosctl (généré) |
-| `clusterconfig/bleu-kalecgos-vert-eranikus.yaml` | Config du nœud (généré) |
+| `clusterconfig/bleu-arcanogos-vert-itharius.yaml` | Config du nœud (généré) |

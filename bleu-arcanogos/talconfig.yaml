@@ -1,22 +1,22 @@
-# homelab-talos/clusters/kalecgos/talconfig.yaml
+# homelab-talos/clusters/bleu-arcanogos/talconfig.yaml
 # Requires talhelper >= v3.0.37 (multi-document strategic-merge patch support).
 # Check: talhelper --version
-clusterName: bleu-kalecgos
+clusterName: bleu-arcanogos
 talosVersion: v1.13.5
 kubernetesVersion: v1.36.2
 
-endpoint: https://192.168.1.11:6443
+endpoint: https://192.168.1.12:6443
 
 # Désactiver le CNI par défaut (Flannel) + kube-proxy : Cilium prend le relais
 cniConfig:
   name: none
 
 nodes:
-  - hostname: vert-eranikus
-    ipAddress: 192.168.1.11
+  - hostname: vert-itharius
+    ipAddress: 192.168.1.12
     controlPlane: true
     installDiskSelector:
-      serial: "P320HHBB250926006689"   # Patriot M.2 P320 128GB — OS uniquement
+      serial: "P320HHBB250926006779"   # Patriot M.2 P320 128GB — OS uniquement
     # Patches spécifiques au nœud : layout disque + modules kernel LVM.
     # NB : strategic-merge uniquement (pas de RFC6902 sur configs multi-docs).
     patches:
@@ -48,8 +48,8 @@ nodes:
         name: lvmpv
         provisioning:
           diskSelector:
-            match: disk.serial == "202512100355"
-          minSize: 400GiB
+            match: disk.serial == "2102357DWVN0RA105082"
+          minSize: 800GiB
           grow: true
 
 # Patches cluster-wide
