@@ -5,7 +5,7 @@ clusterName: bleu-arcanogos
 talosVersion: v1.13.5
 kubernetesVersion: v1.36.2
 
-endpoint: https://192.168.1.138:6443
+endpoint: https://192.168.1.12:6443
 
 # Désactiver le CNI par défaut (Flannel) + kube-proxy : Cilium prend le relais
 cniConfig:
@@ -13,7 +13,7 @@ cniConfig:
 
 nodes:
   - hostname: vert-itharius
-    ipAddress: 192.168.1.138
+    ipAddress: 192.168.1.12
     controlPlane: true
     installDiskSelector:
       serial: "P320HHBB250926006779"   # Patriot M.2 P320 128GB — OS uniquement
