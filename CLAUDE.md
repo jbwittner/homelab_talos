@@ -5,7 +5,7 @@ Dépôt de configuration de clusters Kubernetes Talos Linux gérés via `talhelp
 ## Structure
 
 - `docs/` — documentation générique (avec placeholders) : `INSTALLATION.md`, `BOOTSTRAP.md`, `COMMANDES.md`.
-- `<cluster>/` — un répertoire par cluster (actuellement `bleu-arcanogos/` et `bleu-kalecgos/`), avec `talconfig.yaml`, `talsecret.sops.yaml`, `clusterconfig/` (généré, gitignored) et un `README.md`.
+- `<cluster>/` — un répertoire par cluster (actuellement `bleu-arcanagos/` et `bleu-kalecgos/`), avec `talconfig.yaml`, `talsecret.sops.yaml`, `clusterconfig/` (généré, gitignored) et un `README.md`.
 - `archive/` — anciens clusters (neltharion, ysera, onyxia).
 
 ## Règle : README de cluster

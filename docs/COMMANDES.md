@@ -1,6 +1,6 @@
 # Guide des commandes
 
-Commandes générales pour gérer les clusters Talos de ce dépôt. Pour les IPs, noms de fichiers et procédures spécifiques, voir le README du cluster ([bleu-arcanogos](../bleu-arcanogos/README.md), [bleu-kalecgos](../bleu-kalecgos/README.md)).
+Commandes générales pour gérer les clusters Talos de ce dépôt. Pour les IPs, noms de fichiers et procédures spécifiques, voir le README du cluster ([bleu-arcanagos](../bleu-arcanagos/README.md), [bleu-kalecgos](../bleu-kalecgos/README.md)).
 
 > **Important :** toujours exécuter les commandes depuis le répertoire du cluster concerné (ex. `cd neltharion/`). Les chemins `./clusterconfig/...` en dépendent.
 

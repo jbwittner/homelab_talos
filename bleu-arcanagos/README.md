@@ -1,4 +1,4 @@
-# Cluster bleu-arcanogos
+# Cluster bleu-arcanagos
 
 Cluster Kubernetes Talos Linux mono-nœud, homelab (réseau local).
 
@@ -6,7 +6,7 @@ Cluster Kubernetes Talos Linux mono-nœud, homelab (réseau local).
 
 | Champ | Valeur |
 |-------|--------|
-| Nom | bleu-arcanogos (clusterName `bleu-arcanogos`) |
+| Nom | bleu-arcanagos (clusterName `bleu-arcanagos`) |
 | Endpoint | https://192.168.1.12:6443 |
 | Talos | v1.13.5 |
 | Kubernetes | v1.36.2 |
@@ -28,11 +28,11 @@ Valeurs de ce cluster (déjà substituées dans les commandes ci-dessous) :
 | Placeholder | Valeur |
 |-------------|--------|
 | `<IP>` | 192.168.1.12 |
-| `<cluster>` | bleu-arcanogos |
-| `<node-file>` | bleu-arcanogos-vert-itharius.yaml |
-| `<context>` | admin@bleu-arcanogos |
+| `<cluster>` | bleu-arcanagos |
+| `<node-file>` | bleu-arcanagos-vert-itharius.yaml |
+| `<context>` | admin@bleu-arcanagos |
 
-> Toujours exécuter les commandes depuis ce répertoire (`cd bleu-arcanogos/`). Les chemins `./clusterconfig/...` en dépendent.
+> Toujours exécuter les commandes depuis ce répertoire (`cd bleu-arcanagos/`). Les chemins `./clusterconfig/...` en dépendent.
 > Docs génériques : [BOOTSTRAP.md](../docs/BOOTSTRAP.md), [COMMANDES.md](../docs/COMMANDES.md).
 
 ---
@@ -66,7 +66,7 @@ talosctl version --insecure --nodes 192.168.1.12
 `talhelper genconfig` a besoin de `talsecret.sops.yaml`. Le générer puis le chiffrer **avant** l'étape suivante :
 
 ```bash
-cd bleu-arcanogos/
+cd bleu-arcanagos/
 talhelper gensecret > talsecret.sops.yaml
 sops -e -i talsecret.sops.yaml
 ```
@@ -77,20 +77,20 @@ sops -e -i talsecret.sops.yaml
 ## 2. Générer les configurations
 
 ```bash
-cd bleu-arcanogos/
+cd bleu-arcanagos/
 talhelper genconfig
 ```
 
 Produit dans `clusterconfig/` :
 - `talosconfig` — configuration client
-- `bleu-arcanogos-vert-itharius.yaml` — configuration du nœud
+- `bleu-arcanagos-vert-itharius.yaml` — configuration du nœud
 
 ## 3. Appliquer la configuration au nœud
 
 ```bash
 talosctl apply-config --insecure \
   --nodes 192.168.1.12 \
-  --file ./clusterconfig/bleu-arcanogos-vert-itharius.yaml
+  --file ./clusterconfig/bleu-arcanagos-vert-itharius.yaml
 ```
 
 > `--insecure` obligatoire au premier démarrage (pas encore de certificat TLS). Le nœud redémarre automatiquement après l'application.
@@ -133,7 +133,7 @@ talosctl kubeconfig \
 
 Le kubeconfig est fusionné dans `~/.kube/config`. Vérifier l'accès :
 ```bash
-kubectl --context=admin@bleu-arcanogos get nodes
+kubectl --context=admin@bleu-arcanagos get nodes
 ```
 
 ## Vérifier le stockage (après config)
@@ -165,7 +165,7 @@ talosctl -n 192.168.1.12 -e 192.168.1.12 mounts --talosconfig=./clusterconfig/ta
 
 ### Générer les configurations
 ```bash
-cd bleu-arcanogos/
+cd bleu-arcanagos/
 talhelper genconfig
 ```
 
@@ -186,7 +186,7 @@ talosctl -n 192.168.1.12 -e 192.168.1.12 version --talosconfig=./clusterconfig/t
 ## Mettre à jour le cluster
 
 ```bash
-cd bleu-arcanogos/
+cd bleu-arcanagos/
 
 # 1. Modifier talconfig.yaml
 # 2. Régénérer les configurations
@@ -197,7 +197,7 @@ talhelper gencommand apply
 # ou directement :
 talosctl apply-config --talosconfig=./clusterconfig/talosconfig \
   --nodes=192.168.1.12 \
-  --file=./clusterconfig/bleu-arcanogos-vert-itharius.yaml
+  --file=./clusterconfig/bleu-arcanagos-vert-itharius.yaml
 ```
 
 > `talhelper genconfig` régénère un `talosconfig` valide 365 jours à chaque exécution — le contenu diffère donc à chaque run.
@@ -272,7 +272,7 @@ talosctl -n 192.168.1.12 -e 192.168.1.12 version --talosconfig=./clusterconfig/t
 | `--insecure` rejeté | Utiliser seulement au démarrage initial (mode maintenance) |
 | Disques non reconnus | Vérifier avec `talosctl get disks` |
 | Modifications ignorées | Éditer `talconfig.yaml`, pas les fichiers `clusterconfig/` |
-| Commande exécutée hors dossier cluster | `cd bleu-arcanogos/` avant toute commande |
+| Commande exécutée hors dossier cluster | `cd bleu-arcanagos/` avant toute commande |
 
 ## Fichiers du cluster
 
@@ -281,4 +281,4 @@ talosctl -n 192.168.1.12 -e 192.168.1.12 version --talosconfig=./clusterconfig/t
 | `talconfig.yaml` | Configuration déclarative du cluster |
 | `talsecret.sops.yaml` | Secrets chiffrés (certificats, tokens) |
 | `clusterconfig/talosconfig` | Configuration client talosctl (généré) |
-| `clusterconfig/bleu-arcanogos-vert-itharius.yaml` | Config du nœud (généré) |
+| `clusterconfig/bleu-arcanagos-vert-itharius.yaml` | Config du nœud (généré) |

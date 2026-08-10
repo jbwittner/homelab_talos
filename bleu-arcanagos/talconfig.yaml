@@ -1,7 +1,7 @@
-# homelab-talos/clusters/bleu-arcanogos/talconfig.yaml
+# homelab-talos/clusters/bleu-arcanagos/talconfig.yaml
 # Requires talhelper >= v3.0.37 (multi-document strategic-merge patch support).
 # Check: talhelper --version
-clusterName: bleu-arcanogos
+clusterName: bleu-arcanagos
 talosVersion: v1.13.5
 kubernetesVersion: v1.36.2
 
