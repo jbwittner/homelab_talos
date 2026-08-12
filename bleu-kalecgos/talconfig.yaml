@@ -60,7 +60,7 @@ nodes:
           physical: true
         dhcp: true
         vip:
-          ip: 192.168.1.14s
+          ip: 192.168.1.14
     patches:
       - |-
         apiVersion: v1alpha1
