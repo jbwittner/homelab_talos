@@ -91,7 +91,7 @@ nodes:
         name: lvmpv
         provisioning:
           diskSelector:
-            match: disk.serial == "202512100355"
+            match: disk.serial == "2102357DWVN0RA105625"
           minSize: 400GiB
           grow: true
 
