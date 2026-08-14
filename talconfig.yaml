@@ -73,29 +73,27 @@ nodes:
           grow: true
 
   # ─────────────────────────────────────────────────────────────
-  # 3e nœud — décommenter à réception.
-  # Nom : vol vert, nom officiel WoW (ysondre / merithra / valithria).
-  # - hostname: vert-ysondre
-  #   ipAddress: 192.168.1.13
-  #   controlPlane: true
-  #   installDiskSelector:
-  #     serial: "<serial disque OS>"
-  #   networkInterfaces:
-  #     - deviceSelector:
-  #         physical: true
-  #       dhcp: true
-  #       vip:
-  #         ip: 192.168.1.14
-  #   patches:
-  #     - |-
-  #       apiVersion: v1alpha1
-  #       kind: RawVolumeConfig
-  #       name: lvmpv
-  #       provisioning:
-  #         diskSelector:
-  #           match: disk.serial == "<serial disque data>"
-  #         minSize: 400GiB
-  #         grow: true
+  - hostname: vert-ysondre
+    ipAddress: 192.168.1.13
+    controlPlane: true
+    installDiskSelector:
+      serial: "P320HHBB250926000686"
+    networkInterfaces:
+      - deviceSelector:
+          physical: true
+        dhcp: true
+        vip:
+          ip: 192.168.1.14
+    patches:
+      - |-
+        apiVersion: v1alpha1
+        kind: RawVolumeConfig
+        name: lvmpv
+        provisioning:
+          diskSelector:
+            match: disk.serial == "202512100355"
+          minSize: 400GiB
+          grow: true
 
 # ═════════════════════════════════════════════════════════════
 # Patches cluster-wide — identiques sur tous les nœuds.
