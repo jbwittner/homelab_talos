@@ -145,7 +145,7 @@ Une fois le cluster bootstrappé, utiliser `talosconfig` :
 talosctl -n 192.168.1.11 -e 192.168.1.11 get disks --talosconfig=./clusterconfig/talosconfig
 
 # Volumes détectés
-talosctl -n 192.168.1.11 -e 192.168.1.11 get discoveredvolumes --talosconfig=./clusterconfig/talosconfig
+talosctl -n 192.168.1.13 -e 192.168.1.14 get discoveredvolumes --talosconfig=./clusterconfig/talosconfig
 
 # Statut des volumes gérés (phase, taille, point de montage)
 talosctl -n 192.168.1.11 -e 192.168.1.11 get volumestatus --talosconfig=./clusterconfig/talosconfig
