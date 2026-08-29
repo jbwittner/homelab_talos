@@ -45,7 +45,7 @@ nodes:
         name: lvmpv
         provisioning:
           diskSelector:
-            match: disk.serial == "202512100355"
+            match: disk.serial == "25185002A2F3"   # CT1000P310SSD8 1 To — data
           minSize: 400GiB
           grow: true
 

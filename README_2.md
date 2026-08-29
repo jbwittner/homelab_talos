@@ -19,7 +19,8 @@ Cluster Kubernetes Talos Linux mono-nœud, homelab (réseau local).
 
 | Disque | Série | Rôle |
 |--------|-------|------|
-| nvme0n1 | 202512100355 | Système (installDisk) |
+| nvme0n1 | P320HHBB250926006689 | Patriot M.2 P320 128 Go — Système (installDisk) |
+| nvme1n1 | 25185002A2F3 | CT1000P310SSD8 1 To — data (RawVolume `lvmpv`) |
 
 ## Paramètres
 
